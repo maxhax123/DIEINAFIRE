@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nothing Suspicious</title>
+  <style>
+    body {
+      background: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    img {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+    }
+  </style>
+
+  <script>
+    let popups = [];
+
+    function createPopup(text, xOffset) {
+      const width = 300, height = 200;
+      const left = Math.floor(window.screenX + (window.innerWidth / 2) + xOffset - (width / 2));
+      const top = Math.floor(window.screenY + (window.innerHeight / 3) - (height / 2));
+      const features = `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no,status=no`;
+      
+      const popup = window.open("", "", features);
+      if (!popup) return;
+
+      popup.document.write(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <title>${text}</title>
+          <style>
+            body {
+              margin: 0;
+              background: black;
+              color: red;
+              font-size: 50px;
+              text-align: center;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100%;
+              position: relative;
+            }
+            img {
+              position: absolute;
+              width: 150px;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+            }
+          </style>
+        </head>
+        <body>
+          <img src="https://media2.giphy.com/media/l1J9QZXasDUhbX0fC/giphy.gif" alt="gif">
+          <div>${text}</div>
+        </body>
+        </html>
+      `);
+      popup.document.close();
+      setTimeout(() => { if (!popup.closed) popup.close(); }, 3000);
+
+      popups.push(popup);
+    }
+
+    function triggerPopups() {
+      setTimeout(() => createPopup("Die", -350), 0);
+      setTimeout(() => createPopup("In A", 0), 500);
+      setTimeout(() => createPopup("FIRE", 350), 1000);
+      setTimeout(startShaking, 1400);
+      setTimeout(spawnChaosPopups, 2400); // CHAOS starts 1s after "Die in a Fire" disappears
+    }
+
+    function startShaking() {
+      setInterval(() => {
+        popups.forEach(popup => {
+          if (popup && !popup.closed) {
+            let xShake = Math.floor(Math.random() * 10) - 5;
+            let yShake = Math.floor(Math.random() * 10) - 5;
+            try {
+              popup.moveBy(xShake, yShake);
+            } catch (e) {}
+          }
+        });
+      }, 50);
+    }
+
+    // **NEW FUNCTION: CHAOTIC POPUPS**
+    function spawnChaosPopups() {
+      for (let i = 0; i < 9999; i++) { // Spawns 15 popups randomly
+        setTimeout(() => {
+          const width = 250, height = 150;
+          const left = Math.floor(Math.random() * (screen.width - width));
+          const top = Math.floor(Math.random() * (screen.height - height));
+          const features = `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no,status=no`;
+
+          let popup = window.open("", "", features);
+          if (!popup) return;
+
+          popup.document.write(`
+            <html><head><title>ERROR</title>
+            <style>
+              body { background:black; color:red; font-size:30px; text-align:center; }
+            </style>
+            </head>
+            <body>WARNING!<br>System Failure!</body>
+            </html>
+          `);
+          popup.document.close();
+          popups.push(popup);
+        }, i * 200); 
+      }
+      setTimeout(startCrazyJitter, 3000); // Starts extreme jittering
+    }
+
+    // **NEW FUNCTION: INSANE JITTER**
+    function startCrazyJitter() {
+      setInterval(() => {
+        popups.forEach(popup => {
+          if (popup && !popup.closed) {
+            let xShake = Math.floor(Math.random() * 20) - 10;
+            let yShake = Math.floor(Math.random() * 20) - 10;
+            try {
+              popup.moveBy(xShake, yShake);
+            } catch (e) {}
+          }
+        });
+      }, 30);
+    }
+
+    window.onload = function() {
+      const audio = document.getElementById("audio");
+      audio.currentTime = 36;
+      audio.play();
+      setTimeout(triggerPopups, 2403);
+    };
+  </script>
+
+  <script>
+    function requestFullscreenLoop() {
+      document.documentElement.requestFullscreen().catch(err => {
+        console.log("Fullscreen request failed: ", err);
+        setTimeout(requestFullscreenLoop, 1000);
+      });
+    }
+    requestFullscreenLoop();
+  </script>
+</head>
+<body>
+  <img src="https://media1.tenor.com/m/GKkSlQ0gKZwAAAAC/fnaf-springtrap.gif" alt="Fullscreen GIF">
+  <audio id="audio" src="https://github.com/maxhax123/DIEINAFIRE/raw/main/Five%20Nights%20at%20Freddy's%203%20Song%20(Feat.%20EileMonty%20%26%20Orko)%20-%20Die%20In%20A%20Fire%20(FNAF3)%20-%20Living%20Tombsto.mp3"></audio>
+</body>
+</html>
